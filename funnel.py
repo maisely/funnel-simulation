@@ -17,7 +17,7 @@ def UserSim(n, lmbd):
     Output: 
     - list of exponential random variable simulations (not array)
     """
-    return list(np.random.exponential(scale=lmbd, size=n))
+    return list(np.random.exponential(scale=1.0/lmbd, size=n))
 
 
 def plot_funnel(stoptimes, start, end, inv, title):

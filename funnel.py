@@ -95,7 +95,7 @@ def cdf(x, lmbd):
 	"""
 	Compute the CDF of an exponentially distributed variable
 	"""
-	return 1 - math.exp(-lmbd * x)
+	return 1 - np.exp(-lmbd * x)
 
 
 def EstLam2(hurdle_list, breaks):

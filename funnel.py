@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np 
-import math 
 import matplotlib.pyplot as plt
 
 ## HELPER FUNCTIONS ##
@@ -110,9 +109,10 @@ def EstLam2(hurdle_list, breaks):
     """
     m0, m2 = hurdle_list[0], hurdle_list[-1]
     
-    return lambda lmbd: m0 * np.log( cdf(breaks[0], lmbd) ) + \
-                  sum([ np.log( cdf(breaks[i+1], lmbd) - cdf(breaks[i], lmbd)) for i in range(len(breaks)-1) ]) + \
-                  m2 * (-lmbd) * breaks[-1]
+    return lambda lmbd: sum([np.log( np.exp(-lmbd*breaks[i]) - np.exp(-lmbd*breaks[i+1]) ) * hurdle_list[i+1] \
+    						for i in range(len(breaks)-1)]) + \
+		                m0 * np.log( 1 - np.exp(-lmbd * breaks[0]) ) + \
+		                m2 * (-lmbd) * breaks[-1]
 
 
 def MaxMLE(hurdle_list, breaks, lmbds):
@@ -214,29 +214,32 @@ if __name__ == '__main__':
 	#----------------------------------------------------------------------
 	print("\nQUESTION 4")
 	breakpoints_lst = [[.25, .75], [.25, 3], [.25, 10]]
-	est_lmbd, mle_lmbd = [], []
+	est_lmbd, mle_lmbd, diff = [], [], []
 
 	for brks in breakpoints_lst:
 	    for i in range(1000): 
-	        tmp_est, tmp_mle = [], []    
+	        tmp_est, tmp_mle,tmp_diff = [], [], []   
 	        # simulate user list
 	        stoptimes = UserSim(100, 1) 
-	        # calculate lambda based on 1/mean_x
-	        tmp_est.append(EstLam1(stoptimes)) 
-	        # calculate basen on breakpoints
-	        tmp_mle.append( MaxMLE( HurdleFun(stoptimes, brks), brks, list(np.arange(.1, 3, .05)))) 
-	    
-	    mean_est, mean_mle = np.mean(tmp_est), np.mean(tmp_mle) # mean of 1000 simulations
-	    est_lmbd.append(mean_est); mle_lmbd.append(mean_mle)
 
-	 # calculate differences 
+	        # calculate lambda 
+	        lam1 = EstLam1(stoptimes)
+	        lam2 = MaxMLE( HurdleFun(stoptimes, brks), brks, list(np.arange(.1, 3, .05)))
+	        tmp_est.append(lam1); tmp_mle.append(lam2); tmp_diff.append(lam1-lam2)
+	    
+	    # mean of 1000 simulations
+	    mean_est, mean_mle,mean_diff = np.mean(tmp_est), np.mean(tmp_mle),np.mean(tmp_diff) 
+	    est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(mean_diff)
+
+		 # calculate differences 
 	diff_lmbd = pd.DataFrame({
     'Breakpoints': breakpoints_lst,
     'EstLam1': est_lmbd,
     'EstLam2': mle_lmbd,
+    'Diff': diff
 	})
 
-	diff_lmbd['Diff'] = diff_lmbd['EstLam1'] - diff_lmbd['EstLam2']
+	# diff_lmbd['Diff'] = diff_lmbd['EstLam1'] - diff_lmbd['EstLam2']
 	print(diff_lmbd)
 
 

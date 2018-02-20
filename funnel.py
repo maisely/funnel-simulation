@@ -26,11 +26,11 @@ def plot_funnel(stoptimes, start, end, inv, title):
     """
     stoptimes = np.array(stoptimes)
     bins = np.arange(start, end+inv, inv)
-    funnel_bins = [len(stoptimes[stoptimes >= edge]) for edge in bins]
+    funnel_bins = [sum(stoptimes >= edge) for edge in bins]
     
     plt.bar(bins, funnel_bins, width=.2)
-    plt.xlabel('The number of users who survive')
-    plt.ylabel('Stop time')
+    plt.ylabel('The number of users who survive')
+    plt.xlabel('Stop time')
     plt.title(title)
 
 

@@ -84,7 +84,7 @@ def HurdleFun(stoptimes, breaks):
     - List of the number of users who fail to proceed beyond that break-point, 
       but did get to the previous break-point.
     """
-    brks = [0] + breaks; brks = brks + [1] # add zero and one to the beginning and end of the list
+    brks = [0] + breaks; brks = brks + [999e99] # add zero and a large number to the beginning and end of the list
     output = [ sum( [ 1 for t in stoptimes if t < brks[i] and t >= brks[i-1] ] )   
              for i, n in enumerate(brks) ][1:]
     return output
@@ -231,7 +231,7 @@ if __name__ == '__main__':
 	    mean_est, mean_mle,mean_diff = np.mean(tmp_est), np.mean(tmp_mle),np.mean(tmp_diff) 
 	    est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(mean_diff)
 
-		 # calculate differences 
+	# output
 	diff_lmbd = pd.DataFrame({
     'Breakpoints': breakpoints_lst,
     'EstLam1': est_lmbd,
@@ -239,7 +239,6 @@ if __name__ == '__main__':
     'Diff': diff
 	})
 
-	# diff_lmbd['Diff'] = diff_lmbd['EstLam1'] - diff_lmbd['EstLam2']
 	print(diff_lmbd)
 
 

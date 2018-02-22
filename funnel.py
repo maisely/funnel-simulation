@@ -2,6 +2,12 @@ import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt
 
+#----------------------------------------------------------------------------------------#
+# MSAN603 FUNNEL SIMULATION                                                          	 #
+# Members:  Ker-Yu Ong - Maise Ly - Shikhar Gupta - Sooraj Subrahmannian - Yiqiang Zhao  #		
+#----------------------------------------------------------------------------------------#
+
+
 ## HELPER FUNCTIONS ##
 
 #----------------------------------------------------------------------
@@ -87,20 +93,6 @@ def HurdleFun(stoptimes, breaks):
     brks = [0] + breaks; brks = brks + [999e99] # add zero and a large number to the beginning and end of the list
     output = [ sum( [ 1 for t in stoptimes if t < brks[i] and t >= brks[i-1] ] )   
              for i, n in enumerate(brks) ][1:]
-    # output= []
-    # sorted_bp = np.array(sorted(breaks))
-    # hurdle_list = np.array(stoptimes)
-
-    # for i in range(len(sorted_bp)):
-    #     if i==0:
-    #         items = hurdle_list[(hurdle_list < sorted_bp[i])]
-    #         output.append(len(items))
-    #     else:
-    #         items = hurdle_list[(hurdle_list < sorted_bp[i])&(hurdle_list > sorted_bp[i-1])]
-    #         output.append(len(items))
-    #     if i == len(sorted_bp)-1:
-    #         items = hurdle_list[(hurdle_list > sorted_bp[i])]
-    #         output.append(len(items))        
     return output
 
 
@@ -228,7 +220,6 @@ if __name__ == '__main__':
 	#----------------------------------------------------------------------
 	print("\nQUESTION 4")
 	breakpoints_lst = [[.25, .75], [.25, 3], [.25, 10]]
-	# breakpoints_lst = [[.25, .75], [.25, 1], [.25, 1.5], [.25, 3], [.25, 10]]
 	est_lmbd, mle_lmbd, diff = [], [], []
 
 	for brks in breakpoints_lst:

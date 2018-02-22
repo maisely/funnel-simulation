@@ -87,6 +87,20 @@ def HurdleFun(stoptimes, breaks):
     brks = [0] + breaks; brks = brks + [999e99] # add zero and a large number to the beginning and end of the list
     output = [ sum( [ 1 for t in stoptimes if t < brks[i] and t >= brks[i-1] ] )   
              for i, n in enumerate(brks) ][1:]
+    # output= []
+    # sorted_bp = np.array(sorted(breaks))
+    # hurdle_list = np.array(stoptimes)
+
+    # for i in range(len(sorted_bp)):
+    #     if i==0:
+    #         items = hurdle_list[(hurdle_list < sorted_bp[i])]
+    #         output.append(len(items))
+    #     else:
+    #         items = hurdle_list[(hurdle_list < sorted_bp[i])&(hurdle_list > sorted_bp[i-1])]
+    #         output.append(len(items))
+    #     if i == len(sorted_bp)-1:
+    #         items = hurdle_list[(hurdle_list > sorted_bp[i])]
+    #         output.append(len(items))        
     return output
 
 
@@ -214,22 +228,24 @@ if __name__ == '__main__':
 	#----------------------------------------------------------------------
 	print("\nQUESTION 4")
 	breakpoints_lst = [[.25, .75], [.25, 3], [.25, 10]]
+	# breakpoints_lst = [[.25, .75], [.25, 1], [.25, 1.5], [.25, 3], [.25, 10]]
 	est_lmbd, mle_lmbd, diff = [], [], []
 
 	for brks in breakpoints_lst:
-	    for i in range(1000): 
-	        tmp_est, tmp_mle,tmp_diff = [], [], []   
-	        # simulate user list
-	        stoptimes = UserSim(100, 1) 
+		np.random.seed(42)
+		for i in range(1000): 
+			tmp_est, tmp_mle,tmp_diff = [], [], []   
+			# simulate user list
+			stoptimes = UserSim(100, 1) 
 
-	        # calculate lambda 
-	        lam1 = EstLam1(stoptimes)
-	        lam2 = MaxMLE( HurdleFun(stoptimes, brks), brks, list(np.arange(.1, 3, .05)))
-	        tmp_est.append(lam1); tmp_mle.append(lam2); tmp_diff.append(lam1-lam2)
+			# calculate lambda 
+			lam1 = EstLam1(stoptimes)
+			lam2 = MaxMLE( HurdleFun(stoptimes, brks), brks, list(np.arange(.1, 3, .05)))
+			tmp_est.append(lam1); tmp_mle.append(lam2); tmp_diff.append(lam1-lam2)
 	    
 	    # mean of 1000 simulations
-	    mean_est, mean_mle,mean_diff = np.mean(tmp_est), np.mean(tmp_mle),np.mean(tmp_diff) 
-	    est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(mean_diff)
+		mean_est, mean_mle,mean_diff = np.mean(tmp_est), np.mean(tmp_mle),np.mean(tmp_diff) 
+		est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(mean_diff)
 
 	# output
 	diff_lmbd = pd.DataFrame({

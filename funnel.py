@@ -247,8 +247,3 @@ if __name__ == '__main__':
 	})
 
 	print(diff_lmbd)
-
-
-	# TO BE REMOVED
-	lambdaCI_df.to_csv("lambdaCI.csv") 
-	diff_lmbd.to_csv("diff_df.csv")

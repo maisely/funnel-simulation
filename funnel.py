@@ -236,7 +236,7 @@ if __name__ == '__main__':
 	    
 	    # mean of 1000 simulations
 		mean_est, mean_mle,mean_diff = np.mean(tmp_est), np.mean(tmp_mle),np.mean(tmp_diff) 
-		est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(mean_diff)
+		est_lmbd.append(mean_est); mle_lmbd.append(mean_mle);diff.append(abs(mean_diff))
 
 	# output
 	diff_lmbd = pd.DataFrame({
